@@ -27,7 +27,7 @@ import { Loading } from './Loading'
 import { Page404 } from './Page404'
 import { PageHead } from './PageHead'
 import { PageAside } from './PageAside'
-// import { Footer } from './Footer'
+import { Footer } from './Footer'
 import { NotionPageHeader } from './NotionPageHeader'
 import { GitHubShareButton } from './GitHubShareButton'
 
@@ -205,7 +205,7 @@ export const NotionPage: React.FC<types.PageProps> = ({
     [block, recordMap, isBlogPost]
   )
 
-  // const footer = React.useMemo(() => <Footer />, [])
+  const footer = React.useMemo(() => <Footer />, [])
 
   if (router.isFallback) {
     return <Loading />
@@ -283,7 +283,7 @@ export const NotionPage: React.FC<types.PageProps> = ({
         mapImageUrl={mapImageUrl}
         searchNotion={config.isSearchEnabled ? searchNotion : null}
         pageAside={pageAside}
-        // footer={footer}
+        footer={footer}
       />
 
       <GitHubShareButton />
