@@ -1,22 +1,71 @@
-import * as React from 'react'
-import { domain } from 'lib/config'
-import { resolveNotionPage } from 'lib/resolve-notion-page'
-import { NotionPage } from 'components'
+import React, {useState} from "react";
+import type {NextPage} from 'next'
 
-export const getStaticProps = async () => {
-  try {
-    const props = await resolveNotionPage(domain)
+const Home: NextPage = () => {
+  const [data, setData] = useState({
+    quote: '',
+    author: '',
+    source: ''
+  });
 
-    return { props, revalidate: 10 }
-  } catch (err) {
-    console.error('page error', domain, err)
-
-    // we don't want to publish the error version of this page, so
-    // let next.js know explicitly that incremental SSG failed
-    throw err
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const endpoint = '/api/quote'
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }
+    const response = await fetch(endpoint, options);
+    const result = await response.json();
   }
+
+  const handleChange = (event: React.ChangeEvent<{ name: string, value: string }>) => {
+    const name = event?.currentTarget?.name,
+      value = event?.currentTarget?.value;
+    setData({...data, ...{[name]: value}});
+  }
+
+  return (
+    <form className='w-full' onSubmit={handleSubmit}>
+      <table className='w-1/2 mx-auto'>
+        <tbody>
+        <tr>
+          <td className='uppercase'>Quote</td>
+          <td>
+            <textarea name='quote' className='border-2 h-10 w-full p-2'
+                      value={data?.quote}
+                      onChange={handleChange}/>
+          </td>
+        </tr>
+        {/*<tr>*/}
+        {/*  <td className='uppercase'>Author</td>*/}
+        {/*  <td>*/}
+        {/*    <input type="text" name='author' className='border-2 h-10 w-full p-2'*/}
+        {/*           value={data?.author}*/}
+        {/*           onChange={handleChange}/>*/}
+        {/*  </td>*/}
+        {/*</tr>*/}
+        {/*<tr>*/}
+        {/*  <td className='uppercase'>Source</td>*/}
+        {/*  <td>*/}
+        {/*    <input type="text" name='source' className='border-2 h-10 w-full p-2'*/}
+        {/*           value={data?.source}*/}
+        {/*           onChange={handleChange}/>*/}
+        {/*  </td>*/}
+        {/*</tr>*/}
+        </tbody>
+      </table>
+
+      <div className='w-1/2 mt-2'>
+        <button type='submit'
+                className='float-right bg-blue-500 text-white px-3 py-2 rounded-md font-medium'>Save
+        </button>
+      </div>
+    </form>
+  )
 }
 
-export default function NotionDomainPage(props) {
-  return <NotionPage {...props} />
-}
+export default Home
