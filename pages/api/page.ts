@@ -8,27 +8,15 @@ type Data = {
 }
 
 const notion = new Client({auth: process.env.NEXT_PUBLIC_NOTION_TOKEN})
-const databaseId = process.env.NEXT_PUBLIC_NOTION_DATABASE_ID ?? ''
+const pageId = process.env.NEXT_PUBLIC_NOTION_PAGE_ID ?? ''
 
-async function add(req: NextApiRequest, res: NextApiResponse<Data>) {
+async function get(req: NextApiRequest, res: NextApiResponse<Data>) {
   try {
-    const response = await notion.pages.create({
-      parent: {database_id: databaseId},
-      properties: {
-        Quote: {
-          title: [
-            {
-              "text": {
-                "content": req.body.quote
-              }
-            }
-          ]
-        },
-      },
-    })
+    const page = await notion.pages.retrieve({page_id: pageId});
+
     return res.status(200).json({
       message: 'Success!',
-      data: response
+      data: page
     })
   } catch (error) {
     console.error('Error!')
@@ -39,5 +27,5 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  return add(req, res);
+  return get(req, res);
 }

@@ -8,13 +8,18 @@ type Data = {
 }
 
 const notion = new Client({auth: process.env.NEXT_PUBLIC_NOTION_TOKEN})
+const blockId = process.env.NEXT_PUBLIC_NOTION_DATABASE_ID ?? ''
 
-async function me(req: NextApiRequest, res: NextApiResponse<Data>) {
+async function get(req: NextApiRequest, res: NextApiResponse<Data>) {
   try {
-    const response = await notion.users.me({})
+    const blocks = await notion.blocks.children.list({
+      block_id: blockId,
+      page_size: 10,
+    });
+
     return res.status(200).json({
       message: 'Success!',
-      data: JSON.parse(JSON.stringify(response))
+      data: blocks
     })
   } catch (error) {
     console.error('Error!')
@@ -25,5 +30,5 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  return me(req, res);
+  return get(req, res);
 }
