@@ -1,16 +1,13 @@
 import type {NextPage} from 'next';
-import dynamic from 'next/dynamic'
-import {Suspense} from 'react'
-
-const DynamicHeader = dynamic(() => import('../components/Header'), {
-  suspense: true,
-})
+import Header from "../components/Header";
+import Content from "../components/Content";
 
 const Home: NextPage = () => {
   return (
-    <Suspense fallback={`Loading...`}>
-      <DynamicHeader/>
-    </Suspense>
+    <>
+      <Header/>
+      <Content/>
+    </>
   )
 }
 

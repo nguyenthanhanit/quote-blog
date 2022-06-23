@@ -1,29 +1,35 @@
 import React, {useEffect, useState} from "react";
 import type {NextPage} from 'next';
+import Image from 'next/image';
 
 const Header: NextPage = () => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch('api/page')
-      .then(res => {
-        if (res.ok) return res.json()
-        throw res
-      })
+    setLoading(true)
+    fetch('/api/page')
+      .then(res => res.json())
       .then(data => {
-        setData(data)
-      })
-      .catch(error => {
-        console.error('Error fetching', error)
-      })
-      .finally(() => {
+        setData(data.data)
         setLoading(false)
       })
-  }, []);
+  }, [])
+
+  if (loading) return <p>Loading...</p>
+  if (!data) return <p>No profile data</p>
+
+  const cover = data?.cover?.external?.url;
 
   return (
-    <div>1</div>
+    <header>
+      <Image
+        src={cover}
+        alt="Background Cover"
+        width={500}
+        height={500}
+      />
+    </header>
   )
 }
 
