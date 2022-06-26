@@ -15,7 +15,7 @@ async function get(req: NextApiRequest, res: NextApiResponse<Data>) {
   try {
     const blocks = await notion.blocks.children.list({
       block_id: blockId,
-      page_size: 2,
+      page_size: 10,
     });
 
     const blocksId = blocks.results.map(item => {

@@ -27,12 +27,15 @@ const Content: NextPage = () => {
   })
 
   return (
-    <main>
+    <main className={'text-white w-1/2'}>
       {
-        quotes.map((item: any) => {
+        quotes.map((item: any, key: number) => {
           const quote = item.quote.rich_text[0].plain_text;
 
-          return <div>{quote}</div>
+          return <>
+            <br/>
+            <div key={`key${key}`}>{quote}</div>
+          </>
         })
       }
     </main>
